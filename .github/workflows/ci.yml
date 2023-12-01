@@ -12,19 +12,13 @@ on:
   pull_request:
     branches:
       - 'master'
+
 jobs:
   php-cs-fixer:
-    name: Check code style
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: php-cs-fixer
-        uses: ale94lko/php-cs-fixer-action@v1.0.1
-        with:
-          php-cs-fixer-version: v3.34.1
+    uses: ./.github/workflows/check-code-style.yml
 
   composer:
-    name: Install composer
+    name: Install dependencies
     runs-on: ubuntu-latest
     needs: [php-cs-fixer]
     steps:
