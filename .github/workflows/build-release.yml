@@ -15,7 +15,6 @@ on:
 
 jobs:
   php-cs-fixer:
-    name: Check code style
     uses: ./.github/workflows/check-code-style.yml
 
   composer:
