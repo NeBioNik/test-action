@@ -70,7 +70,6 @@ jobs:
 
        # make release
       - uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         name: Create release
         with:
           files: release/*.zip
