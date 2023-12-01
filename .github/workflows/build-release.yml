@@ -54,6 +54,7 @@ jobs:
       - run: cp -r src webtlo.local
       - run: zip -r -9 "release/webtlo.zip" webtlo.local
 
+      - run: chmod +x ./win/make-wtlo-win.sh
       - run: ./win/make-wtlo-win.sh
       - run: mv "webtlo.local" "webtlo-win/nginx/wtlo"
       - run: zip -r -9 "release/webtlo-win-{{ github.ref_name }}.zip" webtlo-win
