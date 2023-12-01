@@ -54,7 +54,9 @@ jobs:
       with:
         path: ./*
         key: ${{ github.sha }}
-    - run: cp -r src webtlo.local && zip -r -9 release/webtlo.zip webtlo.local/
+    - run: cp -r src webtlo.local
+    - run: mkdir -p release
+    - run: zip -r -9 "release/webtlo.zip" webtlo.local
     - uses: actions/upload-artifact@v3
       name: Upload artifact
       with:
