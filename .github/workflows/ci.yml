@@ -37,16 +37,16 @@ jobs:
         args: "--ignore-platform-reqs --optimize-autoloader"
         dev: no
 
-    - run: zip -r -9 webtlo.zip src/
+    - run: cp src webtlo.local && zip -r -9 webtlo.zip webtlo.local/
 
     - uses: actions/upload-artifact@v3
+      if: startsWith(github.ref, 'refs/tags/')
       name: Upload artifact
       with:
         path: webtlo.zip
 
     - uses: softprops/action-gh-release@v1
       name: Create release
-      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: webtlo.zip
         prerelease: true
