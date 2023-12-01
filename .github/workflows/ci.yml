@@ -34,7 +34,7 @@ jobs:
         args: "--ignore-platform-reqs --optimize-autoloader"
         dev: no
 
-    - run: zip -r -9 webtlo.zip vendor/
+    - run: zip -r -9 webtlo.zip src/
 
     - uses: actions/upload-artifact@v3
       name: Upload artifact
