@@ -16,14 +16,7 @@ on:
 jobs:
   php-cs-fixer:
     name: Check code style
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: php-cs-fixer
-        uses: ale94lko/php-cs-fixer-action@v1.0.1
-        with:
-          php-cs-fixer-version: v3.34.1
+    uses: ./.github/workflows/check-code-style.yml
 
   composer:
     name: Install dependencies
@@ -36,7 +29,8 @@ jobs:
         working_dir: 'src'
         args: "--ignore-platform-reqs --optimize-autoloader"
         dev: no
-    - uses: actions/cache@v2
+    - name: Cache composer
+      uses: actions/cache@v3
       id: restore-build
       with:
         path: ./*
@@ -49,7 +43,8 @@ jobs:
     needs: [composer]
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/cache@v2
+    - name: Restore composer
+      uses: actions/cache@v3
       id: restore-build
       with:
         path: ./*
