@@ -53,15 +53,18 @@ jobs:
       - run: mkdir -p release
       - run: cp -r src webtlo.local
       - run: zip -r -9 "release/webtlo.zip" webtlo.local
-      - run: zip -r -9 "release/webtlo2.zip" webtlo.local
+
+      - run: mv "webtlo.local" "webtlo-win/nginx/wtlo"
+      - run: zip -r -9 "release/webtlo-win-{{ github.ref_name }}.zip" webtlo-win
+      - run: ./make-wtlo-win.sh
 
       - uses: actions/upload-artifact@v3
         name: Upload artifact
         with:
           path: release/*.zip
 
-      - uses: softprops/action-gh-release@v1
-        name: Create release
-        with:
-          files: release/*.zip
-          prerelease: true
+#      - uses: softprops/action-gh-release@v1
+#        name: Create release
+#        with:
+#          files: release/*.zip
+#          prerelease: true

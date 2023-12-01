@@ -18,15 +18,9 @@ mv "webtlo-win/nginx-$NGINX_VER" "webtlo-win/nginx"
 wget -nv -O php.zip "https://windows.php.net/downloads/releases/$PHP_VER.zip"
 unzip -d webtlo-win/php php.zip
 
-# Web-TLO: https://github.com/keepers-team/webtlo
-wget -nv -O webtlo.zip "https://github.com/keepers-team/webtlo/archive/refs/tags/$WEBTLO_VER.zip"
-unzip -d webtlo-win webtlo.zip
-mv "webtlo-win/webtlo-$WEBTLO_VER" "webtlo-win/nginx/wtlo"
 
 # Apply overlays
-cp -vr artifacts/* webtlo-win/
-cp -vr overlay/* webtlo-win/
-mkdir -p dist
-zip -r -9 "dist/webtlo-win-$WEBTLO_VER-$SCRIPT_VER.zip" webtlo-win
+cp -vr win/artifacts/* webtlo-win/
+cp -vr win/overlay/* webtlo-win/
 
 echo Done.
