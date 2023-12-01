@@ -34,6 +34,15 @@ jobs:
         args: "--ignore-platform-reqs --optimize-autoloader"
         dev: no
 
-    - uses: montudor/action-zip@v1
+    - run: zip -r -9 webtlo.zip vendor/
+
+    - uses: actions/upload-artifact@v3
+      name: Upload artifact
       with:
-        args: zip -qq -r vendor.zip src
+        path: dist/*.zip
+
+    - uses: softprops/action-gh-release@v1
+      name: Create release
+      with:
+        files: dist/*.zip
+        prerelease: true
