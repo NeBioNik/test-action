@@ -10,17 +10,6 @@ on:
     branches:
       - 'master'
 jobs:
-
-  build:
-    name: test
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - uses: php-actions/composer@v6
-      with:
-        container_workdir: 'src'
-
   php-cs-fixer:
     name: Check code style
     runs-on: ubuntu-latest
@@ -30,3 +19,15 @@ jobs:
         uses: ale94lko/php-cs-fixer-action@v1.0.1
         with:
           php-cs-fixer-version: v3.34.1
+
+  build:
+    needs: [php-cs-fixer]
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: php-actions/composer@v6
+      with:
+        working_dir: 'src'
+
