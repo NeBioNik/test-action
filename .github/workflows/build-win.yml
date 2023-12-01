@@ -1,22 +1,23 @@
-name: Web-TLO Windows Builder
 on:
-  push:
-    tags:
-      - "v*.*"
+  workflow_call:
 
 jobs:
-  wtlo-win:
-    name: wTLO win build
-    runs-on: ubuntu-22.04
+  build-nix:
+    name: Build webtlo
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: ./make-wtlo-win.sh
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Restore composer
+        uses: actions/cache@v3
+        id: restore-build
         with:
-          path: dist/*.zip
-      - name: Create release
-        uses: softprops/action-gh-release@v1
+          path: ./*
+          key: ${{ github.sha }}
+      - run: cp -r src webtlo.local
+      - run: mkdir -p release
+      - run: zip -r -9 "release/webtlo2.zip" webtlo.local
+      - uses: actions/upload-artifact@v3
+        name: Upload artifact
         with:
-          files: dist/*.zip
-          prerelease: true
+          path: release/webtlo.zip
