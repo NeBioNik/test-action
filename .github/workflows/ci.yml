@@ -39,10 +39,10 @@ jobs:
     - uses: actions/upload-artifact@v3
       name: Upload artifact
       with:
-        path: dist/*.zip
+        path: webtlo.zip
 
     - uses: softprops/action-gh-release@v1
       name: Create release
       with:
-        files: dist/*.zip
+        files: webtlo.zip
         prerelease: true
