@@ -12,7 +12,7 @@ final class Helper
      * Определить версию webTLO из файла.
      */
     public static function getVersion(): object
-    {
+    { asd
         $webtlo_version_defaults = [
             'version'          => '',
             'github'           => '',
