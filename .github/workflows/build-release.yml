@@ -31,7 +31,7 @@ jobs:
           key: ${{ github.sha }}
 
   build:
-    name: Build webtlo
+    name: Build webtlo zip
     runs-on: ubuntu-latest
     needs: [ composer ]
     if: startsWith(github.ref, 'refs/tags/')
@@ -43,17 +43,23 @@ jobs:
           args: "--ignore-platform-reqs --optimize-autoloader"
           dev: no
 
-      - run: mkdir -p release
-
       # build unix webtlo
-      - run: mv src webtlo.local
-      - run: zip -r -9 "release/webtlo.zip" webtlo.local
+      - run: |
+          mkdir -p release
+          mv src webtlo.local
+          zip -r -9 "release/webtlo.zip" webtlo.local
+
+          echo "Done webtlo.zip"
 
         # build win webtlo
-      - run: chmod +x ./win/make-wtlo-win.sh
-      - run: ./win/make-wtlo-win.sh
-      - run: mv "webtlo.local" "webtlo-win/nginx/wtlo"
-      - run: zip -r -9 "release/webtlo-win-${{ github.ref_name }}.zip" webtlo-win
+      - run: |
+          zip_name = webtlo-win-${{ github.ref_name }}.zip
+          chmod +x ./win/make-wtlo-win.sh
+         ./win/make-wtlo-win.sh
+          mv "webtlo.local" "webtlo-win/nginx/wtlo"
+          zip -r -9 "release/$zip_name" webtlo-win
+
+          echo "Done $zip_name"
 
       # upload artifact
       - uses: actions/upload-artifact@v3
@@ -62,6 +68,57 @@ jobs:
           path: release/*.zip
 
        # make release
+      - uses: softprops/action-gh-release@v1
+        name: Create release
+        with:
+          files: release/*.zip
+          prerelease: true
+
+  docker:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    needs: [ validate ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            berkut174/webtlo
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+#      - name: Login to DockerHub
+#        if: github.event_name != 'pull_request'
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+#          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#      - name: Build and push
+#        uses: docker/build-push-action@v3
+#        with:
+#          context: .
+#          push: ${{ github.event_name != 'pull_request' }}
+#          platforms: linux/amd64,linux/arm64
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+
+  release:
+    name: Make release
+    runs-on: ubuntu-latest
+    needs: [ build, docker ]
+    steps:
       - uses: softprops/action-gh-release@v1
         name: Create release
         with:
