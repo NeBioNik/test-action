@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-NGINX_VERSION=1.24.0
-PHP_VERSION=php-8.2.10-nts-Win32-vs16-x64
+NGINX_VERSION=${NGINX_VERSION:=1.24.0}
+PHP_VERSION=${PHP_VERSION:=php-8.2.10-nts-Win32-vs16-x64}
 
 rm -rf webtlo-win
 mkdir -p webtlo-win/php
