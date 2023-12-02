@@ -18,44 +18,6 @@ jobs:
     name: Validate
     uses: ./.github/workflows/check-code-style.yml
 
-  build:
-    name: Build webtlo zip
-    runs-on: ubuntu-latest
-    needs: [ validate ]
-#    if: startsWith(github.ref, 'refs/tags/')
-    steps:
-      - uses: actions/checkout@v3
-      - uses: php-actions/composer@v6
-        with:
-          working_dir: 'src'
-          args: "--ignore-platform-reqs --optimize-autoloader"
-          dev: no
-
-      # build unix webtlo
-      - run: |
-          mkdir -p release
-          mv src webtlo.local
-          zip -r -9 "release/webtlo.zip" webtlo.local
-
-          echo "Done webtlo.zip"
-
-        # build win webtlo
-      - run: |
-          zip_name=webtlo-win-${{ github.ref_name }}.zip
-          chmod +x ./win/make-wtlo-win.sh
-          ./win/make-wtlo-win.sh
-          mv "webtlo.local" "webtlo-win/nginx/wtlo"
-          zip -r -9 "release/$zip_name" webtlo-win
-
-          echo "Done $zip_name"
-
-      - run: ls release
-      - name: Cache release
-        uses: actions/cache@v3
-        with:
-          path: ./release
-          key: ${{ github.sha }}
-
   docker:
     name: Build docker image
     runs-on: ubuntu-latest
@@ -79,26 +41,70 @@ jobs:
             type=sha
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
+      - name: Set up Docker Build
         uses: docker/setup-buildx-action@v2
-#      - name: Login to DockerHub
-#        if: github.event_name != 'pull_request'
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-#          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-#      - name: Build and push
-#        uses: docker/build-push-action@v3
-#        with:
-#          context: .
-#          push: ${{ github.event_name != 'pull_request' }}
-#          platforms: linux/amd64,linux/arm64
-#          tags: ${{ steps.meta.outputs.tags }}
-#          labels: ${{ steps.meta.outputs.labels }}
+  #      - name: Login to DockerHub
+  #        if: github.event_name != 'pull_request'
+  #        uses: docker/login-action@v2
+  #        with:
+  #          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+  #      - name: Build and push
+  #        uses: docker/build-push-action@v3
+  #        with:
+  #          context: .
+  #          push: ${{ github.event_name != 'pull_request' }}
+  #          platforms: linux/amd64,linux/arm64
+  #          tags: ${{ steps.meta.outputs.tags }}
+  #          labels: ${{ steps.meta.outputs.labels }}
+
+  build:
+    name: Build webtlo zip
+    runs-on: ubuntu-latest
+    needs: [ validate ]
+    # if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          working_dir: 'src'
+          args: "--ignore-platform-reqs --optimize-autoloader"
+          dev: no
+
+      - run: mkdir -p release
+      - name: Build unix webtlo.zip
+        run: |
+          zip_name=webtlo.zip
+
+          mv src webtlo.local
+          zip -r -9 "release/$zip_name" webtlo.local
+
+          echo "Done $zip_name"
+
+      - name: Build win webtlo.zip
+        run: |
+          zip_name=webtlo-win-${{ github.ref_name }}.zip
+          
+          chmod +x ./win/make-wtlo-win.sh
+          ./win/make-wtlo-win.sh
+          
+          mv "webtlo.local" "webtlo-win/nginx/wtlo"
+          zip -r -9 "release/$zip_name" webtlo-win
+
+          echo "Done $zip_name"
+
+      - name: Cache release
+        uses: actions/cache@v3
+        with:
+          path: ./release
+          key: ${{ github.sha }}
 
   release:
     name: Make release
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     needs: [ build, docker ]
     steps:
       - name: Restore release
@@ -107,16 +113,16 @@ jobs:
         with:
           key: ${{ github.sha }}
           path: ./release
-      - run: ls release
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: releases
           path: release/*.zip
 
-#      - uses: softprops/action-gh-release@v1
-#        name: Create release
-#        with:
-#          body: test desc
-#          files: release/*.zip
-#          prerelease: true
+      - uses: softprops/action-gh-release@v1
+        name: Create release
+        with:
+          body: test desc
+          files: release/*.zip
+          prerelease: true
