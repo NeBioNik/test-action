@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Lint Code Base
-        uses: super-linter/super-linter@v5
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Lint Code Base
+#        uses: super-linter/super-linter@v5
+#        env:
+#          VALIDATE_ALL_CODEBASE: false
+#          DEFAULT_BRANCH: master
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/cache@v3
         with:
           path: .php-cs-fixer.cache
@@ -22,6 +22,8 @@ jobs:
 
       - name: PHP-CS-Fixer
         uses: docker://oskarstark/php-cs-fixer-ga
+        with:
+          args: --stop-on-violation
 #      - name: php-cs-fixer
 #        uses: ale94lko/php-cs-fixer-action@v1.0.1
 #        with:
