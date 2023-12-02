@@ -92,6 +92,9 @@ jobs:
           zip -r -9 "release/$zip_name" webtlo-win
 
           echo "Done $zip_name"
+        env:
+          NGINX_VERSION: ${{ vars.NGINX_VERSION }}
+          PHP_VERSION: ${{ vars.PHP_VERSION }}
 
       - name: Cache release
         uses: actions/cache@v3
