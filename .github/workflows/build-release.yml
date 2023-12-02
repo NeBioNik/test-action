@@ -55,7 +55,7 @@ jobs:
       - run: |
           zip_name = webtlo-win-${{ github.ref_name }}.zip
           chmod +x ./win/make-wtlo-win.sh
-         ./win/make-wtlo-win.sh
+          ./win/make-wtlo-win.sh
           mv "webtlo.local" "webtlo-win/nginx/wtlo"
           zip -r -9 "release/$zip_name" webtlo-win
 
