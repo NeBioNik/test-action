@@ -23,7 +23,7 @@ jobs:
       - name: PHP-CS-Fixer
         uses: docker://oskarstark/php-cs-fixer-ga
         with:
-          args: --stop-on-violation
+          args: -v --dry-run
 #      - name: php-cs-fixer
 #        uses: ale94lko/php-cs-fixer-action@v1.0.1
 #        with:
