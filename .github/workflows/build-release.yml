@@ -61,11 +61,12 @@ jobs:
 
           echo "Done $zip_name"
 
+      - run: ls release
       - name: Cache release
         uses: actions/cache@v3
         with:
-          key: webtlo-release
-          path: ~/release/*.zip
+          path: ~/release
+          key: ${{ github.sha }}
 
 
   docker:
@@ -114,10 +115,12 @@ jobs:
     needs: [ build, docker ]
     steps:
       - name: Restore release
+        id: restore-release
         uses: actions/cache@v3
         with:
-          key: webtlo-release
+          key: ${{ github.sha }}
           path: ~/release
+      - run: ls release
 
 #      - uses: softprops/action-gh-release@v1
 #        name: Create release
