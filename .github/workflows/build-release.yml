@@ -125,4 +125,6 @@ jobs:
         with:
           body: test desc
           files: release/*.zip
+          draft: true
           prerelease: true
+          generate_release_notes: true
