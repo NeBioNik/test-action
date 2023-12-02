@@ -13,6 +13,8 @@ final class Helper
      */
     public static function getVersion(): object
     {
+
+        123
         $webtlo_version_defaults = [
             'version'          => '',
             'github'           => '',
