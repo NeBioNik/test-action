@@ -16,9 +16,9 @@ on:
 jobs:
   validate:
     name: Validate
-    uses: ./.github/workflows/check.yml
+    uses: ./.github/workflows/validate.yml
 
-  docker:
+  build-docker:
     name: Build docker image
     runs-on: ubuntu-latest
     needs: [ validate ]
@@ -57,11 +57,11 @@ jobs:
   #          tags: ${{ steps.meta.outputs.tags }}
   #          labels: ${{ steps.meta.outputs.labels }}
 
-  build:
+  build-zip:
     name: Build webtlo zip
     runs-on: ubuntu-latest
     needs: [ validate ]
-    # if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
@@ -87,7 +87,7 @@ jobs:
           
           chmod +x ./win/make-wtlo-win.sh
           ./win/make-wtlo-win.sh
-          
+
           mv "webtlo.local" "webtlo-win/nginx/wtlo"
           zip -r -9 "release/$zip_name" webtlo-win
 
@@ -97,7 +97,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./release
-          key: ${{ github.sha }}
+          key: ${{ github.sha }}-release
 
   release:
     name: Make release
@@ -109,7 +109,7 @@ jobs:
         id: restore-release
         uses: actions/cache@v3
         with:
-          key: ${{ github.sha }}
+          key: ${{ github.sha }}-release
           path: ./release
 
       - name: Upload artifact
@@ -117,6 +117,7 @@ jobs:
         with:
           name: releases
           path: release/*.zip
+          retention-days: 7
 
       - uses: softprops/action-gh-release@v1
         name: Create release
