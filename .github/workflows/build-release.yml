@@ -65,7 +65,7 @@ jobs:
       - name: Cache release
         uses: actions/cache@v3
         with:
-          path: ~/release
+          path: ./release
           key: ${{ github.sha }}
 
 
@@ -119,7 +119,7 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ github.sha }}
-          path: ~/release
+          path: ./release
       - run: ls release
 
 #      - uses: softprops/action-gh-release@v1
