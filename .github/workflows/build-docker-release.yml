@@ -2,7 +2,7 @@ on:
   workflow_call:
 
 env:
-  IMAGE_NAME: $DOCKER_HUB_IMAGE_NAME || berkut174/webtlo
+  IMAGE_NAME: ${{ vars.DOCKER_HUB_IMAGE_NAME || berkut174/webtlo }}
 
 jobs:
 
