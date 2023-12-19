@@ -19,3 +19,4 @@ return $config->setRules([
         'closure_fn_spacing'       => 'none',
     ],
 ])->setFinder($finder);
+ 
