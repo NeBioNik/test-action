@@ -20,10 +20,10 @@ jobs:
 #    needs: [ validate ]
     uses: ./.github/workflows/build-docker-release.yml
     with:
-      image-name: ${{ DOCKER_HUB_IMAGE_NAME }}
+      image-name: ${{ vars.DOCKER_HUB_IMAGE_NAME }}
     secrets:
-      dockerhub-login: ${{ DOCKER_HUB_USERNAME }}
-      dockerhub-access-token: ${{ DOCKER_HUB_ACCESS_TOKEN }}
+      dockerhub-login: ${{ secrets.DOCKER_HUB_USERNAME }}
+      dockerhub-access-token: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
 #  build:
 #    name: Build webtlo zip
