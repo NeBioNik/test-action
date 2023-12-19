@@ -22,7 +22,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ inputs.image-name }}
+          images: 'nebionik/webtlo'
           tags: |
             type=schedule
             type=ref,event=branch
