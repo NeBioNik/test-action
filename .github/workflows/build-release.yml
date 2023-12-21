@@ -17,7 +17,7 @@ jobs:
 
   docker:
     name: Docker
-#    needs: [ validate ]
+    needs: [ validate ]
     uses: ./.github/workflows/build-docker-release.yml
     with:
       REGISTRY_IMAGE: ${{ vars.DOCKER_HUB_IMAGE_NAME }}
@@ -25,53 +25,53 @@ jobs:
       DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
       DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-#  build:
-#    name: Build webtlo zip
-#    runs-on: ubuntu-latest
-#    needs: [ validate ]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Install dependencies
-#        uses: php-actions/composer@v6
-#        with:
-#          working_dir: src
-#          args: --ignore-platform-reqs --optimize-autoloader
-#          dev: no
-#
-#      - run: mkdir -p release
-#      - name: Build unix webtlo
-#        run: |
-#          zip_name=webtlo.zip
-#
-#          mv src webtlo.local
-#          zip -r -9 "release/$zip_name" webtlo.local
-#
-#          echo "Done $zip_name"
-#
-#      - name: Build win webtlo
-#        run: |
-#          zip_name=webtlo-win-${{ github.ref_name }}.zip
-#
-#          chmod +x ./win/make-wtlo-win.sh
-#          ./win/make-wtlo-win.sh
-#
-#          mv "webtlo.local" "webtlo-win/nginx/wtlo"
-#          zip -r -9 "release/$zip_name" webtlo-win
-#
-#          echo "Done $zip_name"
-#        env:
-#          NGINX_VERSION: ${{ vars.NGINX_VERSION }}
-#          PHP_VERSION: ${{ vars.PHP_VERSION }}
-#
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: releases
-#          path: release/*.zip
-#          retention-days: 7
-#
-#      - name: Cache release
-#        uses: actions/cache@v3
-#        with:
-#          path: ./release
-#          key: ${{ github.sha }}-release
+  build:
+    name: Build webtlo zip
+    runs-on: ubuntu-latest
+    needs: [ validate ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          working_dir: src
+          args: --ignore-platform-reqs --optimize-autoloader
+          dev: no
+
+      - run: mkdir -p release
+      - name: Build unix webtlo
+        run: |
+          zip_name=webtlo.zip
+
+          mv src webtlo.local
+          zip -r -9 "release/$zip_name" webtlo.local
+
+          echo "Done $zip_name"
+
+      - name: Build win webtlo
+        run: |
+          zip_name=webtlo-win-${{ github.ref_name }}.zip
+
+          chmod +x ./win/make-wtlo-win.sh
+          ./win/make-wtlo-win.sh
+
+          mv "webtlo.local" "webtlo-win/nginx/wtlo"
+          zip -r -9 "release/$zip_name" webtlo-win
+
+          echo "Done $zip_name"
+        env:
+          NGINX_VERSION: ${{ vars.NGINX_VERSION }}
+          PHP_VERSION: ${{ vars.PHP_VERSION }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: releases
+          path: release/*.zip
+          retention-days: 7
+
+      - name: Cache release
+        uses: actions/cache@v3
+        with:
+          path: ./release
+          key: ${{ github.sha }}-release

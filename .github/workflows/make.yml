@@ -14,21 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref_type == 'tag' }}
     steps:
-      - run: |
-          echo 123;
-          echo ${{ github.tag_name }}
-          echo 321
+      - name: Restore release
+        id: restore-release
+        uses: actions/cache@v3
+        with:
+          key: ${{ github.sha }}-release
+          path: ./release
 
-#      - name: Restore release
-#        id: restore-release
-#        uses: actions/cache@v3
-#        with:
-#          key: ${{ github.sha }}-release
-#          path: ./release
-#
-#      - uses: softprops/action-gh-release@v1
-#        name: Create release
-#        with:
-#          files: release/*.zip
-#          draft: true
-#          generate_release_notes: true
+      - uses: softprops/action-gh-release@v1
+        name: Create release
+        with:
+          files: release/*.zip
+          draft: true
+          generate_release_notes: true
