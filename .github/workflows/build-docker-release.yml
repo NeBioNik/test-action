@@ -26,6 +26,7 @@ jobs:
           tags: |
             type=schedule
             type=ref,event=branch
+            type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
@@ -44,7 +45,7 @@ jobs:
           password: ${{ secrets.dockerhub-access-token }}
 
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           push: true
           context: .
