@@ -17,4 +17,4 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - run: echo env
-      - run: echo vars
+      - run: echo ${{ vars }}
