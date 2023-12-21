@@ -12,10 +12,11 @@ jobs:
   release:
     name: Make release
     runs-on: ubuntu-latest
-    #    if: ${{ github.ref_type == 'tag' }}
+    if: ${{ github.ref_type == 'tag' }}
     steps:
       - run: |
           echo 123;
+          echo ${{ github.tag_name }}
 
 #      - name: Restore release
 #        id: restore-release
