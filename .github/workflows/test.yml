@@ -16,3 +16,9 @@ jobs:
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
           echo ${{ github.ref_name }}
+
+  test2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ github.ref_type }}
