@@ -16,8 +16,8 @@ jobs:
     name: Build docker image
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ inputs.image-name }}
       - uses: actions/checkout@v4
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
@@ -35,9 +35,6 @@ jobs:
       - run: echo $TEST
         env:
           TEST: ${{ toJSON(steps.meta.outputs.tags) }}
-      - run: echo $TEST
-        env:
-          TEST: ${{ toJSON(steps.meta.outputs.labels) }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
