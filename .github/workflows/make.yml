@@ -17,6 +17,7 @@ jobs:
       - run: |
           echo 123;
           echo ${{ github.tag_name }}
+          echo 321
 
 #      - name: Restore release
 #        id: restore-release
