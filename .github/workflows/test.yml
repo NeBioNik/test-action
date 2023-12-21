@@ -22,3 +22,25 @@ jobs:
     steps:
       - run: |
           echo ${{ github.ref_type }}
+
+  release:
+    name: Make release
+    runs-on: ubuntu-latest
+    if: ${{ github.ref_type == tag }}
+    needs: [ test, test2 ]
+    steps:
+      - run: |
+          echo 123;
+#      - name: Restore release
+#        id: restore-release
+#        uses: actions/cache@v3
+#        with:
+#          key: ${{ github.sha }}-release
+#          path: ./release
+#
+#      - uses: softprops/action-gh-release@v1
+#        name: Create release
+#        with:
+#          files: release/*.zip
+#          draft: true
+#          generate_release_notes: true
