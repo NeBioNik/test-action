@@ -12,11 +12,11 @@ on:
 
 jobs:
   validate:
-    name: Validate
+    name: Code Check
     uses: ./.github/workflows/validate.yml
 
   docker:
-    name: Validate
+    name: Docker
     needs: [ validate ]
     uses: ./.github/workflows/build-docker-release.yml
     with:
