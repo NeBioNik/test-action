@@ -13,7 +13,6 @@ jobs:
     name: Make release
     runs-on: ubuntu-latest
     #    if: ${{ github.ref_type == 'tag' }}
-    needs: [ test, test2 ]
     steps:
       - run: |
           echo 123;
