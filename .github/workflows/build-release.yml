@@ -17,7 +17,7 @@ jobs:
 
   docker:
     name: Validate
-#    needs: [ validate ]
+    needs: [ validate ]
     uses: ./.github/workflows/build-docker-release.yml
     with:
       image-name: ${{ vars.DOCKER_HUB_IMAGE_NAME }}

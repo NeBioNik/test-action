@@ -32,6 +32,13 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
+      - run: echo $TEST
+        env:
+          TEST: ${{ toJSON(steps.meta.outputs.tags) }}
+      - run: echo $TEST
+        env:
+          TEST: ${{ toJSON(steps.meta.outputs.labels) }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
