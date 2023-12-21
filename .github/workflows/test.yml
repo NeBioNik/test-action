@@ -1,5 +1,4 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   Explore-GitHub-Actions:
@@ -16,5 +15,11 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - run: echo ${{ toJSON(env) }}
-      - run: echo ${{ toJSON(vars) }}
+      - name: Dump env context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(env) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump var context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(vars) }}
+        run: echo "$GITHUB_CONTEXT"
