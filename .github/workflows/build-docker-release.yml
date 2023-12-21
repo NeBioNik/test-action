@@ -3,14 +3,14 @@ name: Build Docker images
 on:
   workflow_call:
     inputs:
-      image-name:
+      REGISTRY_IMAGE:
         default: 'berkut174/webtlo'
         required: false
         type: string
     secrets:
-      dockerhub-login:
+      DOCKER_HUB_USERNAME:
         required: true
-      dockerhub-access-token:
+      DOCKER_HUB_ACCESS_TOKEN:
         required: true
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ inputs.image-name }}
+          images: ${{ inputs.REGISTRY_IMAGE }}
           tags: |
             type=schedule
             type=ref,event=branch
@@ -33,10 +33,6 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-
-      - run: echo $TEST
-        env:
-          TEST: ${{ toJSON(steps.meta.outputs.tags) }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -47,14 +43,14 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.dockerhub-login }}
-          password: ${{ secrets.dockerhub-access-token }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          push: true
           context: .
+          push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
