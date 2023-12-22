@@ -34,14 +34,13 @@ jobs:
           # PHP: https://windows.php.net/downloads Non-Thread-Safe
           PHP_RELEASES='https://windows.php.net/downloads/releases'
           
-          curl -s 'https://windows.php.net/downloads/releases/releases.json' | jq  '."8.2".version'
+          curl -s 'https://windows.php.net/downloads/releases/releases.json' | jq -r '."8.2".version'
           
-          PHP_VERSION=`curl -s 'https://windows.php.net/downloads/releases/releases.json' | jq  '."8.2".version'`
-          PHP_PATH="php-$PHP_VERSION-nts-Win32-vs16-x64"
+          PHP_VERSION=`curl -s '$PHP_RELEASES/releases.json' | jq -r '."8.2"."nts-vs16-x64".zip.path`
           
           echo $PHP_VERSION
           
           echo $PHP_PATH
           
-          wget -nv -O php.zip "$PHP_RELEASES/$PHP_PATH.zip"
+          wget -nv -O php.zip "$PHP_RELEASES/$PHP_VERSION.zip"
           unzip -d $zip_dir/php php.zip
