@@ -13,7 +13,7 @@ jobs:
 
   validate:
     name: Check
-    uses: ./.github/workflows/validate.yml
+    uses: ./.github/workflows/sub-check.yml
 
   docker:
     name: Build
