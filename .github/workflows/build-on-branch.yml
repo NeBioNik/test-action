@@ -8,39 +8,24 @@ on:
 
 permissions:
   contents: write
-  
+
 jobs:
 
-#  validate:
-#    name: Check
-#    uses: ./.github/workflows/sub-check.yml
-#
-#  docker:
-#    name: Build
-#    needs: [ validate ]
-#    uses: ./.github/workflows/sub-build-docker.yml
-#    with:
-#      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
-#    secrets:
-#      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-#      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-#
-#  zip:
-#    name: Build
-#    needs: [ validate ]
-#    uses: ./.github/workflows/sub-build-zip.yml
+  validate:
+    name: Check
+    uses: ./.github/workflows/sub-check.yml
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          # PHP: https://windows.php.net/downloads Non-Thread-Safe
-          PHP_RELEASES='https://windows.php.net/downloads/releases'
-          
-          PHP_VERSION=$(curl -s "$PHP_RELEASES/releases.json" | jq -r '."8.2"."nts-vs16-x64".zip.path')
-          
-          echo $PHP_VERSION
-          echo $PHP_PATH
-          
-          wget -nv -O php.zip "$PHP_RELEASES/$PHP_VERSION"
-          unzip -d $zip_dir/php php.zip
+  docker:
+    name: Build
+    needs: [ validate ]
+    uses: ./.github/workflows/sub-build-docker.yml
+    with:
+      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
+    secrets:
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+  zip:
+    name: Build
+    needs: [ validate ]
+    uses: ./.github/workflows/sub-build-zip.yml
