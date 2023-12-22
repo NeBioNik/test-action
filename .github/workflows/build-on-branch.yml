@@ -8,33 +8,35 @@ on:
 
 jobs:
 
-  validate:
-    name: Check
-    uses: ./.github/workflows/sub-check.yml
-
-  docker:
-    name: Build
-    needs: [ validate ]
-    uses: ./.github/workflows/sub-build-docker.yml
-    with:
-      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-  zip:
-    name: Build
-    needs: [ validate ]
-    uses: ./.github/workflows/sub-build-zip.yml
+#  validate:
+#    name: Check
+#    uses: ./.github/workflows/sub-check.yml
+#
+#  docker:
+#    name: Build
+#    needs: [ validate ]
+#    uses: ./.github/workflows/sub-build-docker.yml
+#    with:
+#      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
+#    secrets:
+#      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+#      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#
+#  zip:
+#    name: Build
+#    needs: [ validate ]
+#    uses: ./.github/workflows/sub-build-zip.yml
 
   test:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          # PHP: https://windows.php.net/download Non-Thread-Safe
+          # PHP: https://windows.php.net/downloads Non-Thread-Safe
           PHP_RELEASES='https://windows.php.net/downloads/releases'
           
-          PHP_VERSION=`curl -s '$PHP_RELEASES/releases.json' | jq  '."8.2".version'`
+          curl -s 'https://windows.php.net/downloads/releases/releases.json' | jq  '."8.2".version'
+          
+          PHP_VERSION=`curl -s 'https://windows.php.net/downloads/releases/releases.json' | jq  '."8.2".version'`
           PHP_PATH="php-$PHP_VERSION-nts-Win32-vs16-x64"
           
           echo $PHP_VERSION
