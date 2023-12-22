@@ -4,21 +4,20 @@ on:
   workflow_call:
 
 jobs:
+
   php-cs-fixer:
     name: Code style
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo 'run validate now'
-#      - uses: actions/checkout@v4
-#      - uses: actions/cache@v3
-#        with:
-#          path: .php-cs-fixer.cache
-#          key: ${{ runner.OS }}-${{ github.repository }}-phpcsfixer-${{ github.sha }}
-#          restore-keys: |
-#            ${{ runner.OS }}-${{ github.repository }}-phpcsfixer-
-#
-#      - name: PHP-CS-Fixer
-#        uses: docker://oskarstark/php-cs-fixer-ga
-#        with:
-#          args: -v --dry-run
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: .php-cs-fixer.cache
+          key: ${{ runner.OS }}-${{ github.repository }}-phpcsfixer-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.OS }}-${{ github.repository }}-phpcsfixer-
+
+      - name: PHP-CS-Fixer
+        uses: docker://oskarstark/php-cs-fixer-ga
+        with:
+          args: -v --dry-run

@@ -31,7 +31,7 @@ jobs:
     uses: ./.github/workflows/sub-build-zip.yml
 
   make-release:
-    name: Make release2
+    name: Make release
     runs-on: ubuntu-latest
     needs: [ docker, zip ]
     if: ${{ github.ref_type == 'tag' }}
@@ -40,7 +40,7 @@ jobs:
         id: restore-release
         uses: actions/cache@v3
         with:
-          key: ${{ github.sha }}-release
+          key: ${{ github.ref_type }}-${{ github.sha }}-release
           path: ./release
 
       - uses: softprops/action-gh-release@v1

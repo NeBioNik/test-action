@@ -74,4 +74,4 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./release
-          key: ${{ github.sha }}-release
+          key: ${{ github.ref_type }}-${{ github.sha }}-release
