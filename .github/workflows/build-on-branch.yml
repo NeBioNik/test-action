@@ -42,5 +42,5 @@ jobs:
           
           echo $PHP_PATH
           
-          wget -nv -O php.zip "$PHP_RELEASES/$PHP_VERSION.zip"
+          wget -nv -O php.zip "$PHP_RELEASES/$PHP_VERSION"
           unzip -d $zip_dir/php php.zip
