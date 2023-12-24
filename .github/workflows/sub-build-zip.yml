@@ -23,9 +23,11 @@ jobs:
           dev: no
 
       - name: Test
-        if: ${{ github.ref_type == 'tag' }}
+#        if: ${{ github.ref_type == 'tag' }}
         run: |
           echo ${{ github.ref_name }}
+          cd src
+          cat version.json | jq --arg V ${{ github_ref_name }} '.version=$V' > version.json
 
       - run: mkdir -p release
       - name: Build webtlo.zip
@@ -78,6 +80,7 @@ jobs:
           retention-days: 7
 
       - name: Cache release
+        if: ${{ github.ref_type == 'tag' }}
         uses: actions/cache@v3
         with:
           path: ./release
