@@ -27,7 +27,7 @@ jobs:
         run: |
           echo ${{ github.ref_name }}
           cd src
-          cat version.json | jq --arg V ${{ github_ref_name }} '.version=$V' > version.json
+          cat version.json | jq --arg V ${{ github.ref_name }} '.version=$V' > version.json
 
       - run: mkdir -p release
       - name: Build webtlo.zip
