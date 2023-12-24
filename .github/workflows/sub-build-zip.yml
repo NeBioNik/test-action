@@ -22,6 +22,7 @@ jobs:
           args: --ignore-platform-reqs --optimize-autoloader
           dev: no
 
+      - run: cat src/version.json
       - name: Test
 #        if: ${{ github.ref_type == 'tag' }}
         run: |
@@ -30,6 +31,7 @@ jobs:
           cat version.json | jq --arg V ${{ github.ref_name }} '.version=$V' > version.json
           cat version.json
 
+      - run: cat src/version.json
       - run: mkdir -p release
       - name: Build webtlo.zip
         run: |
