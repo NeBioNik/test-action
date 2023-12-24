@@ -31,5 +31,5 @@ jobs:
 
   zip:
     name: Build
-    needs: [ validate ]
+#    needs: [ validate ]
     uses: ./.github/workflows/sub-build-zip.yml
