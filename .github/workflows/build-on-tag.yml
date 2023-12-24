@@ -9,6 +9,9 @@ on:
 permissions:
   contents: write
 
+env:
+  WEBTLO_VERSION: ${{ github.ref_name }
+
 jobs:
 
   validate:

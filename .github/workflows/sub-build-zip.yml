@@ -22,6 +22,11 @@ jobs:
           args: --ignore-platform-reqs --optimize-autoloader
           dev: no
 
+      - name: Test
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          echo ${{ github.ref_name }}
+
       - run: mkdir -p release
       - name: Build webtlo.zip
         run: |
