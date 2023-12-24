@@ -28,8 +28,7 @@ jobs:
         run: |
           echo ${{ github.ref_name }}
           cd src
-          cat version.json | jq --arg V ${{ github.ref_name }} '.version=$V' > version.json
-          cat version.json
+          cat version.json | jq --arg V master-br '.version=$V' > version.json
 
       - run: cat src/version.json
       - run: mkdir -p release
