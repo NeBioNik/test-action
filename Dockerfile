@@ -27,7 +27,7 @@ ARG S6_OVERLAY_DOWNLOAD="https://github.com/just-containers/s6-overlay/releases/
 RUN \
     S6_ARCH=$(uname -m) && \
     [ "${S6_ARCH}" == "arm/v6" ] && S6_ARCH="armhf"; \
-    [ "${S6_ARCH}" == "arm/v7" ] && S6_ARCH="arm"; \
+    [ "${S6_ARCH}" == "armv7l" ] && S6_ARCH="arm"; \
     echo ${S6_ARCH}; \
     export S6_ARCH; \
     curl -L -s "${S6_OVERLAY_DOWNLOAD}/s6-overlay-noarch.tar.xz"     | tar Jxpf - -C / && \
