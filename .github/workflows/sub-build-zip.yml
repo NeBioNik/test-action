@@ -17,8 +17,7 @@ jobs:
     steps:
       - run: |
           echo $WEBTLO_VERSION
-          echo ${{ vars.WEBTLO_VERSION }}
-          echo ${{ github.ref_name }}
+          echo ${{ inputs.WEBTLO_VERSION }}
       - uses: actions/checkout@v4
       - name: Install dependencies
         uses: php-actions/composer@v6
@@ -27,12 +26,14 @@ jobs:
           args: --ignore-platform-reqs --optimize-autoloader
           dev: no
 
+      - run: cat src/version.json
+
       - name: Write version
         run: |
           cd src
           cat version.json \
-            | jq --arg V ${{ vars.WEBTLO_VERSION }} '.version=$V' \
-            | jq --arg SH ${{ vars.WEBTLO_SHA }} '.sha=$SH' \
+            | jq --arg V ${{ inputs.WEBTLO_VERSION }} '.version=$V' \
+            | jq --arg SH ${{ inputs.WEBTLO_SHA }} '.sha=$SH' \
             > tmp.$$.json
           mv tmp.$$.json version.json
 
