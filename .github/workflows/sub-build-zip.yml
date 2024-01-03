@@ -23,15 +23,16 @@ jobs:
           dev: no
 
       - run: cat src/version.json
+
       - name: Test
 #        if: ${{ github.ref_type == 'tag' }}
         run: |
-          echo ${{ github.ref_name }}
           cd src
           cat version.json | jq --arg V master-br '.version=$V' > tmp.$$.json
           mv tmp.$$.json version.json
 
       - run: cat src/version.json
+
       - run: mkdir -p release
       - name: Build webtlo.zip
         run: |

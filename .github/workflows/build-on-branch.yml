@@ -10,10 +10,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 123;
-      - run: echo $TEST;
-        env:
-          TEST: ${{ toJson(github) }}
+      - run: |
+          echo $WEBTLO_VERSION
+          echo ${{ vars.WEBTLO_VERSION }}
+          echo ${{ github.ref_name }}
+      - uses: actions/checkout@v4
+      - run: cat src/version.json
+
+      - name: Test
+        #        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          cd src
+          token=$(cat version.json | jq --arg V {{ github.ref_name }} '.version=$V')
+          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
+          
+
+      - run: echo "$VERSION_JSON"
 
 #  validate:
 #    name: Check
