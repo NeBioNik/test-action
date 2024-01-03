@@ -2,13 +2,18 @@ name: Sub. Build webtlo zip
 
 on:
   workflow_call:
+    inputs:
+      WEBTLO_VERSION:
+        type: string
+        default: 'unknown'
+      WEBTLO_SHA:
+        type: string
+        default: 'none'
 
 jobs:
   build-zip:
     name: webtlo zip
     runs-on: ubuntu-latest
-    env:
-      WEBTLO_VERSION: ${{ github.ref_name || 'release' }}
     steps:
       - run: |
           echo $WEBTLO_VERSION
@@ -22,13 +27,13 @@ jobs:
           args: --ignore-platform-reqs --optimize-autoloader
           dev: no
 
-      - run: cat src/version.json
-
-      - name: Test
-#        if: ${{ github.ref_type == 'tag' }}
+      - name: Write version
         run: |
           cd src
-          cat version.json | jq --arg V master-br '.version=$V' > tmp.$$.json
+          cat version.json \
+            | jq --arg V ${{ vars.WEBTLO_VERSION }} '.version=$V' \
+            | jq --arg SH ${{ vars.WEBTLO_SHA }} '.sha=$SH' \
+            > tmp.$$.json
           mv tmp.$$.json version.json
 
       - run: cat src/version.json

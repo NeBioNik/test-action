@@ -7,41 +7,12 @@ on:
       - '**'
 
 jobs:
+
+  validate:
+    name: Check
+    uses: ./.github/workflows/sub-check.yml
+
   test:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-      sha: ${{ steps.version.outputs.sha }}
-    steps:
-      - run: |
-          echo $WEBTLO_VERSION
-          echo ${{ vars.WEBTLO_VERSION }}
-          echo ${{ github.ref_name }}
-      - uses: actions/checkout@v4
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          tags: |
-            type=sha,prefix=
-
-      - run: cat src/version.json
-
-      - name: Test
-        id: version
-        run: |
-          echo $DOCKER_METADATA_OUTPUT_VERSION
-          cd src
-          version=$( cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V')
-          
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "sha=$DOCKER_METADATA_OUTPUT_VERSION" >> "$GITHUB_OUTPUT"
-#          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
-
-
-  job2:
     runs-on: ubuntu-latest
     needs: version
     steps:
@@ -54,21 +25,22 @@ jobs:
     name: Version
     uses: ./.github/workflows/sub-get-version.yml
 
-#  validate:
-#    name: Check
-#    uses: ./.github/workflows/sub-check.yml
-
 #  docker:
 #    name: Build
-##    needs: [ validate ]
+#    needs: [ validate, version ]
 #    uses: ./.github/workflows/sub-build-docker.yml
 #    with:
 #      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
+#      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
+#      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
 #    secrets:
 #      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
 #      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-#  zip:
-#    name: Build
-##    needs: [ validate ]
-#    uses: ./.github/workflows/sub-build-zip.yml
+  zip:
+    name: Build
+    needs: [ validate, version ]
+    uses: ./.github/workflows/sub-build-zip.yml
+    with:
+      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
+      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
