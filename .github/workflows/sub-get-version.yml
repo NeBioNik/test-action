@@ -26,8 +26,7 @@ jobs:
       - name: Get metadata
         uses: docker/metadata-action@v5
         with:
-          tags: |
-            type=sha,prefix=
+          tags: type=sha,prefix=
 
       - id: sha
         run: |
@@ -38,5 +37,5 @@ jobs:
         run: |
           echo ${{ github.ref_type }}
           version=$( cd src && cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V' )
-          [ ${{ github.ref_type == 'tag' }} ] && version=${{ github.ref_name }}
+          [ ${{ github.ref_type }} == 'tag' ] && version=${{ github.ref_name }}
           echo "version=$version" >> "$GITHUB_OUTPUT"
