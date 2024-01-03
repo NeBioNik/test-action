@@ -12,30 +12,21 @@ jobs:
     name: Check
     uses: ./.github/workflows/sub-check.yml
 
-  test:
-    runs-on: ubuntu-latest
-    needs: version
-    steps:
-      - env:
-          OUTPUT1: ${{needs.version.outputs.version}}
-          OUTPUT2: ${{needs.version.outputs.sha}}
-        run: echo "$OUTPUT1 $OUTPUT2"
-
   version:
     name: Version
     uses: ./.github/workflows/sub-get-version.yml
 
-#  docker:
-#    name: Build
-#    needs: [ validate, version ]
-#    uses: ./.github/workflows/sub-build-docker.yml
-#    with:
-#      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
-#      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
-#      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
-#    secrets:
-#      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-#      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+  docker:
+    name: Build
+    needs: [ validate, version ]
+    uses: ./.github/workflows/sub-build-docker.yml
+    with:
+      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
+      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
+      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
+    secrets:
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
   zip:
     name: Build
