@@ -26,9 +26,10 @@ jobs:
 
       - name: Test
         run: |
+          echo $DOCKER_METADATA_OUTPUT_VERSION
           cd src
-          token=$(cat version.json | jq --arg V test-test '.version=$V')
-          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
+          cat version.json | jq --arg V $DOCKER_METADATA_OUTPUT_VERSION '.version=$V'
+#          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
           
 
       - run: echo "$VERSION_JSON"
