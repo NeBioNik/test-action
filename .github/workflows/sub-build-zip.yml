@@ -32,7 +32,7 @@ jobs:
         run: |
           cd src
           cat version.json \
-            | jq --arg V ${{ inputs.WEBTLO_VERSION }} '.version=$V' \
+            | jq --arg V -${{ inputs.WEBTLO_VERSION }} '.version+=$V' \
             | jq --arg SH ${{ inputs.WEBTLO_SHA }} '.sha=$SH' \
             > tmp.$$.json
           mv tmp.$$.json version.json
