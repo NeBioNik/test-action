@@ -18,37 +18,51 @@ jobs:
     name: Check
     uses: ./.github/workflows/sub-check.yml
 
-  docker:
-    name: Build
-    needs: [ validate ]
-    uses: ./.github/workflows/sub-build-docker.yml
-    with:
-      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#  docker:
+#    name: Build
+#    needs: [ validate ]
+#    uses: ./.github/workflows/sub-build-docker.yml
+#    with:
+#      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
+#    secrets:
+#      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+#      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#
+#  zip:
+#    name: Build
+#    needs: [ validate ]
+#    uses: ./.github/workflows/sub-build-zip.yml
+#
+#  make-release:
+#    name: Make release
+#    runs-on: ubuntu-latest
+#    needs: [ docker, zip ]
+#    if: ${{ github.ref_type == 'tag' }}
+#    steps:
+#      - name: Restore release
+#        id: restore-release
+#        uses: actions/cache@v3
+#        with:
+#          key: ${{ github.ref_type }}-${{ github.sha }}-release
+#          path: ./release
+#
+#      - uses: softprops/action-gh-release@v1
+#        name: Create release
+#        with:
+#          files: release/*.zip
+#          draft: true
+#          generate_release_notes: true
 
-  zip:
-    name: Build
-    needs: [ validate ]
-    uses: ./.github/workflows/sub-build-zip.yml
 
-  make-release:
-    name: Make release
+  job2:
     runs-on: ubuntu-latest
-    needs: [ docker, zip ]
-    if: ${{ github.ref_type == 'tag' }}
+    needs: version
     steps:
-      - name: Restore release
-        id: restore-release
-        uses: actions/cache@v3
-        with:
-          key: ${{ github.ref_type }}-${{ github.sha }}-release
-          path: ./release
+      - env:
+          OUTPUT1: ${{needs.version.outputs.version}}
+          OUTPUT2: ${{needs.version.outputs.sha}}
+        run: echo "$OUTPUT1 $OUTPUT2"
 
-      - uses: softprops/action-gh-release@v1
-        name: Create release
-        with:
-          files: release/*.zip
-          draft: true
-          generate_release_notes: true
+  version:
+    name: Version
+    uses: ./.github/workflows/sub-get-version.yml

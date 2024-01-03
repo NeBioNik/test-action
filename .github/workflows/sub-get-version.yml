@@ -31,7 +31,7 @@ jobs:
 
       - id: sha
         run: |
-          echo "sha=$DOCKER_METADATA_OUTPUT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "sha=$DOCKER_METADATA_OUTPUT_TAGS" >> "$GITHUB_OUTPUT"
 
       - name: Get version
         id: version
@@ -39,4 +39,3 @@ jobs:
           version=$( cd src && cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V' )
           [ ${{ github.ref_type == 'tag' }} ] && version=${{ github.ref_name }}
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo $version
