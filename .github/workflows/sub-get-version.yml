@@ -2,6 +2,10 @@ name: Sub. Get WebTLO version
 
 on:
   workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      version: ${{ jobs.version.outputs.version }}
+      sha: ${{ jobs.version.outputs.sha }}
 
 jobs:
 
@@ -10,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
+      sha: ${{ steps.sha.outputs.sha }}
       version: ${{ steps.version.outputs.version }}
-      sha: ${{ steps.version.outputs.sha }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,11 +25,14 @@ jobs:
           tags: |
             type=sha,prefix=
 
+      - id: sha
+        run: |
+          echo "sha=$DOCKER_METADATA_OUTPUT_VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Get version
         id: version
         run: |
-          cd src
-          version=$( cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V')
-
+          version=$( cd src && cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V' )
+          [ ${{ github.ref_type == tag }} ] && version=${{ github.ref_name }}
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "sha=$DOCKER_METADATA_OUTPUT_VERSION" >> "$GITHUB_OUTPUT"
+          echo $version
