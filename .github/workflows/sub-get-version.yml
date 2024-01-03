@@ -1,0 +1,31 @@
+name: Sub. Get WebTLO version
+
+on:
+  workflow_call:
+
+jobs:
+
+  version:
+    name: get version
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      sha: ${{ steps.version.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get metadata
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            type=sha,prefix=
+
+      - name: Get version
+        id: version
+        run: |
+          cd src
+          version=$( cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V')
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "sha=$DOCKER_METADATA_OUTPUT_VERSION" >> "$GITHUB_OUTPUT"
