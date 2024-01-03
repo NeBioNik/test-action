@@ -4,8 +4,12 @@ on:
   workflow_call:
     # Map the workflow outputs to job outputs
     outputs:
-      version: ${{ jobs.metadata.outputs.version }}
-      sha: ${{ jobs.metadata.outputs.sha }}
+      version:
+        description: "Version of app"
+        value: ${{ jobs.metadata.outputs.version }}
+      sha:
+        description: "Commit sha-hash"
+        value: ${{ jobs.metadata.outputs.sha }}
 
 jobs:
 
