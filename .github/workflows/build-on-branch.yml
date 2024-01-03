@@ -15,13 +15,19 @@ jobs:
           echo ${{ vars.WEBTLO_VERSION }}
           echo ${{ github.ref_name }}
       - uses: actions/checkout@v4
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            type=sha,prefix={{branch}}-,format=short
+
       - run: cat src/version.json
 
       - name: Test
-        #        if: ${{ github.ref_type == 'tag' }}
         run: |
           cd src
-          token=$(cat version.json | jq --arg V {{ github.ref_name }} '.version=$V')
+          token=$(cat version.json | jq --arg V test-test '.version=$V')
           echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
           
 
@@ -41,7 +47,7 @@ jobs:
 #      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
 #      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-  zip:
-    name: Build
-#    needs: [ validate ]
-    uses: ./.github/workflows/sub-build-zip.yml
+#  zip:
+#    name: Build
+##    needs: [ validate ]
+#    uses: ./.github/workflows/sub-build-zip.yml
