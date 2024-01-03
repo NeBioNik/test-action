@@ -12,7 +12,6 @@ on:
         value: ${{ jobs.metadata.outputs.sha }}
 
 jobs:
-
   metadata:
     name: get version
     runs-on: ubuntu-latest
@@ -28,14 +27,14 @@ jobs:
         with:
           tags: type=sha,prefix=
 
-      - id: sha
+      - name: Get git commit sha
+        id: sha
         run: |
           echo "sha=$DOCKER_METADATA_OUTPUT_TAGS" >> "$GITHUB_OUTPUT"
 
-      - name: Get version
+      - name: Get git ref version
         id: version
         run: |
-          echo ${{ github.ref_type }}
-          version=$( cd src && cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V' )
+          version=$( cd src && cat version.json | jq --arg V -br-${{ github.ref_name }} '.version + $V' )
           [ ${{ github.ref_type }} == 'tag' ] && version=${{ github.ref_name }}
           echo "version=$version" >> "$GITHUB_OUTPUT"
