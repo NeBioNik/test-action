@@ -33,7 +33,7 @@ jobs:
           token=$( cat version.json | jq --arg V $DOCKER_METADATA_OUTPUT_VERSION '.version+=$V')
           
           echo $token
-#          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
+          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
           
 
       - run: echo "$VERSION_JSON"
