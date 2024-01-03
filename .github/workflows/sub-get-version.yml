@@ -35,6 +35,6 @@ jobs:
       - name: Get git ref version
         id: version
         run: |
-          version=$( cd src && cat version.json | jq --arg V -br-${{ github.ref_name }} '.version + $V' )
+          version=$( cd src && cat version.json | jq -r --arg V -br-${{ github.ref_name }} '.version + $V' )
           [ ${{ github.ref_type }} == 'tag' ] && version=${{ github.ref_name }}
           echo "version=$version" >> "$GITHUB_OUTPUT"
