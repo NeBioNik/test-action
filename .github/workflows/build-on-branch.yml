@@ -9,6 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      sha: ${{ steps.version.outputs.sha }}
     steps:
       - run: |
           echo $WEBTLO_VERSION
@@ -26,12 +30,14 @@ jobs:
       - run: cat src/version.json
 
       - name: Test
+        id: version
         run: |
           echo $DOCKER_METADATA_OUTPUT_VERSION
           cd src
-          token=$( cat version.json | jq --arg V -${{ github.ref_name }} '.version+=$V' | jq --arg SH $DOCKER_METADATA_OUTPUT_VERSION '.sha=$SH')
+          version=$( cat version.json | jq --arg V -${{ github.ref_name }} '.version + $V')
           
-          echo $token
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "sha=$DOCKER_METADATA_OUTPUT_VERSION" >> "$GITHUB_OUTPUT"
 #          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
           
 
