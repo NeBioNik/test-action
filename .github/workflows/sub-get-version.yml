@@ -4,12 +4,12 @@ on:
   workflow_call:
     # Map the workflow outputs to job outputs
     outputs:
-      version: ${{ jobs.version.outputs.version }}
-      sha: ${{ jobs.version.outputs.sha }}
+      version: ${{ jobs.metadata.outputs.version }}
+      sha: ${{ jobs.metadata.outputs.sha }}
 
 jobs:
 
-  version:
+  metadata:
     name: get version
     runs-on: ubuntu-latest
     # Map a step output to a job output
