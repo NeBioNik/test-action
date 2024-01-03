@@ -30,10 +30,10 @@ jobs:
         run: |
           echo $DOCKER_METADATA_OUTPUT_VERSION
           cd src
-          token=$( cat version.json | jq --arg V $DOCKER_METADATA_OUTPUT_VERSION '.version+=$V')
+          token=$( cat version.json | jq --arg V ${{ github.ref_name }} '.version+=$V' | jq --arg SH $$DOCKER_METADATA_OUTPUT_VERSION '.sha=$SH')
           
           echo $token
-          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
+#          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
           
 
       - run: echo "$VERSION_JSON"
