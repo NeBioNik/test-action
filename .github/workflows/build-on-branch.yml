@@ -28,7 +28,7 @@ jobs:
         run: |
           echo $DOCKER_METADATA_OUTPUT_VERSION
           cd src
-          cat version.json | jq --arg V $DOCKER_METADATA_OUTPUT_VERSION '.version=$V'
+          cat version.json | jq --arg V $DOCKER_METADATA_OUTPUT_VERSION '.version+=$V'
 #          echo "VERSION_JSON=$token" >> "$GITHUB_ENV"
           
 
