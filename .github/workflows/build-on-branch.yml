@@ -43,6 +43,16 @@ jobs:
 
       - run: echo "$VERSION_JSON"
 
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - env:
+          OUTPUT1: ${{needs.test.outputs.version}}
+          OUTPUT2: ${{needs.test.outputs.sha}}
+        run: echo "$OUTPUT1 $OUTPUT2"
+
 #  validate:
 #    name: Check
 #    uses: ./.github/workflows/sub-check.yml
