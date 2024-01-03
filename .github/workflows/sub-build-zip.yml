@@ -15,9 +15,6 @@ jobs:
     name: webtlo zip
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo $WEBTLO_VERSION
-          echo ${{ inputs.WEBTLO_VERSION }}
       - uses: actions/checkout@v4
       - name: Install dependencies
         uses: php-actions/composer@v6
@@ -25,8 +22,6 @@ jobs:
           working_dir: src
           args: --ignore-platform-reqs --optimize-autoloader
           dev: no
-
-      - run: cat src/version.json
 
       - name: Write version
         run: |
@@ -36,8 +31,6 @@ jobs:
             | jq --arg SH ${{ inputs.WEBTLO_SHA }} '.sha=$SH' \
             > tmp.$$.json
           mv tmp.$$.json version.json
-
-      - run: cat src/version.json
 
       - run: mkdir -p release
       - name: Build webtlo.zip
@@ -52,7 +45,7 @@ jobs:
 
       - name: Build webtlo-win.zip
         run: |
-          zip_name="webtlo-win-$WEBTLO_VERSION.zip"
+          zip_name="webtlo-win-${{ inputs.WEBTLO_VERSION }}.zip"
           zip_dir=webtlo-win
 
           rm -rf $zip_dir
