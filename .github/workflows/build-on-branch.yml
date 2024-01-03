@@ -15,12 +15,14 @@ jobs:
           echo ${{ vars.WEBTLO_VERSION }}
           echo ${{ github.ref_name }}
       - uses: actions/checkout@v4
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
           tags: |
-            type=sha,prefix={{branch}}-,format=short
+            type=ref,event=tag
+            type=sha,prefix=-{{branch}}-
 
       - run: cat src/version.json
 
