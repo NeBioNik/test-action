@@ -25,7 +25,9 @@ jobs:
       - name: Get metadata
         uses: docker/metadata-action@v5
         with:
-          tags: type=sha,prefix=
+          tags: |
+            type=sha,prefix=
+            type=ref,event=branch
 
       - name: Get git commit sha
         id: sha

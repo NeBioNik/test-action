@@ -16,22 +16,22 @@ jobs:
     name: Version
     uses: ./.github/workflows/sub-get-version.yml
 
-  docker:
-    name: Build
-    needs: [ validate, version ]
-    uses: ./.github/workflows/sub-build-docker.yml
-    with:
-      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
-      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
-      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-  zip:
-    name: Build
-    needs: [ validate, version ]
-    uses: ./.github/workflows/sub-build-zip.yml
-    with:
-      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
-      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
+#  docker:
+#    name: Build
+#    needs: [ validate, version ]
+#    uses: ./.github/workflows/sub-build-docker.yml
+#    with:
+#      REGISTRY_IMAGE: ${{ vars.REGISTRY_IMAGE || 'berkut174/webtlo' }}
+#      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
+#      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
+#    secrets:
+#      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+#      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#
+#  zip:
+#    name: Build
+#    needs: [ validate, version ]
+#    uses: ./.github/workflows/sub-build-zip.yml
+#    with:
+#      WEBTLO_VERSION: ${{ needs.version.outputs.version }}
+#      WEBTLO_SHA: ${{ needs.version.outputs.sha }}
