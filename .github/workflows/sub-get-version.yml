@@ -23,11 +23,17 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Get metadata
+        id: meta
         uses: docker/metadata-action@v5
         with:
           tags: |
             type=sha,prefix=
-            type=ref,event=branch
+            type=ref,event=branch,prefix='-br-'
+
+      - run: |
+          echo ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          echo ${{ fromJSON(steps.meta.outputs.json).tags[1] }}
+          echo ${{ fromJSON(steps.meta.outputs.json).tags[2] }}
 
       - name: Get git commit sha
         id: sha
