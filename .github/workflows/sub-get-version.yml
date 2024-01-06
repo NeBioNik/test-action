@@ -28,21 +28,22 @@ jobs:
         with:
           tags: |
             type=sha,prefix=
-            type=ref,event=branch,prefix='-br-'
+            type=ref,event=branch,prefix=-br-
 
       - run: |
+          branch=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           echo ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
           echo ${{ fromJSON(steps.meta.outputs.json).tags[1] }}
-          echo ${{ fromJSON(steps.meta.outputs.json).tags[2] }}
 
       - name: Get git commit sha
         id: sha
         run: |
-          echo "sha=$DOCKER_METADATA_OUTPUT_TAGS" >> "$GITHUB_OUTPUT"
+          echo "sha=${{ fromJSON(steps.meta.outputs.json).tags[1] }}" >> "$GITHUB_OUTPUT"
 
       - name: Get git ref version
         id: version
         run: |
-          version=$( cd src && cat version.json | jq -r --arg V -br-${{ github.ref_name }} '.version + $V' )
+          suffix=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          version=$( cd src && cat version.json | jq -r --arg V $suffix '.version + $V' )
           [ ${{ github.ref_type }} == 'tag' ] && version=${{ github.ref_name }}
           echo "version=$version" >> "$GITHUB_OUTPUT"
